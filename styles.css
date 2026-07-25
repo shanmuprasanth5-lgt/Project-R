@@ -1,0 +1,424 @@
+/* ===========================================================
+   Enroute — Login Page
+   Design tokens
+   Ink Navy   #14213D  — brand panel background
+   Amber      #FFB627  — accent, live/active state
+   Paper      #FAF7F2  — form panel background
+   Slate      #5C6B7A  — secondary text
+   Signal Grn #2E7D5B  — completed / success state
+   White      #FFFFFF  — form card
+   =========================================================== */
+
+:root {
+  --ink: #14213D;
+  --ink-soft: #1E2E52;
+  --amber: #FFB627;
+  --paper: #FAF7F2;
+  --slate: #5C6B7A;
+  --slate-light: #97A3B0;
+  --green: #2E7D5B;
+  --white: #FFFFFF;
+  --line: #E4DFD4;
+
+  --font-display: 'Fraunces', serif;
+  --font-body: 'IBM Plex Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --radius: 14px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-body);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+a { color: inherit; }
+
+.link-inline {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--slate-light);
+  text-underline-offset: 3px;
+  font-size: 0.9rem;
+}
+.link-inline:hover { text-decoration-color: var(--ink); }
+
+/* ---------- Layout ---------- */
+
+.page {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(340px, 42%) 1fr;
+}
+
+@media (max-width: 860px) {
+  .page { grid-template-columns: 1fr; }
+}
+
+/* ---------- Brand panel ---------- */
+
+.brand {
+  background: var(--ink);
+  color: var(--white);
+  padding: 44px 48px 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.brand::after {
+  /* faint route grid texture in the background */
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+  background-size: 34px 34px;
+  pointer-events: none;
+}
+
+.brand > * { position: relative; z-index: 1; }
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo__mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: var(--amber);
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.logo__word {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.25rem;
+  letter-spacing: 0.01em;
+}
+
+.brand__eyebrow {
+  margin: 14px 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+.brand__headline {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2rem, 3.4vw, 2.7rem);
+  line-height: 1.12;
+  margin: 0 0 16px;
+}
+
+.brand__sub {
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: rgba(255,255,255,0.72);
+  max-width: 38ch;
+  margin: 0;
+}
+
+.brand__foot {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.5);
+  margin: 0;
+}
+
+/* ---------- Signature element: live route timeline ---------- */
+
+.route {
+  margin: 36px 0 40px;
+}
+
+.route__line {
+  position: relative;
+  height: 2px;
+  background: rgba(255,255,255,0.16);
+  border-radius: 2px;
+  margin: 0 6px 18px;
+}
+
+.route__fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 62%; /* two of four stops + partial to active stop */
+  background: var(--amber);
+  border-radius: 2px;
+}
+
+.route__stops {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+  margin: -24px 0 0;
+  padding: 0;
+}
+
+.stop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  width: 25%;
+  text-align: center;
+}
+
+.stop__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--ink);
+  border: 2px solid rgba(255,255,255,0.3);
+  display: block;
+}
+
+.stop--done .stop__dot {
+  background: var(--green);
+  border-color: var(--green);
+}
+
+.stop--active .stop__dot {
+  background: var(--amber);
+  border-color: var(--amber);
+  box-shadow: 0 0 0 0 rgba(255,182,39,0.6);
+  animation: pulse 1.8s ease-out infinite;
+}
+
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(255,182,39,0.55); }
+  70%  { box-shadow: 0 0 0 9px rgba(255,182,39,0); }
+  100% { box-shadow: 0 0 0 0 rgba(255,182,39,0); }
+}
+
+.stop__label {
+  font-size: 0.76rem;
+  color: rgba(255,255,255,0.85);
+}
+
+.stop--active .stop__label {
+  color: var(--amber);
+  font-weight: 500;
+}
+
+.stop__time {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: rgba(255,255,255,0.45);
+}
+
+.stop--active .stop__time { color: var(--amber); }
+
+/* ---------- Form panel ---------- */
+
+.form-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 32px;
+}
+
+.form-card {
+  width: 100%;
+  max-width: 380px;
+}
+
+.form-card__head h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.9rem;
+  margin: 0 0 6px;
+}
+
+.form-card__head p {
+  margin: 0 0 32px;
+  color: var(--slate);
+  font-size: 0.95rem;
+}
+
+.field {
+  margin-bottom: 18px;
+}
+
+.field label {
+  display: block;
+  font-size: 0.84rem;
+  font-weight: 500;
+  margin-bottom: 6px;
+  color: var(--ink);
+}
+
+.field__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.field input[type="text"],
+.field input[type="password"] {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1.5px solid var(--line);
+  background: var(--white);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.field input::placeholder { color: var(--slate-light); }
+
+.field input:focus-visible {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px rgba(20,33,61,0.1);
+}
+
+.field.has-error input {
+  border-color: #C5473A;
+}
+
+.field__error {
+  display: block;
+  min-height: 16px;
+  font-size: 0.78rem;
+  color: #C5473A;
+  margin-top: 5px;
+}
+
+.field__input-wrap {
+  position: relative;
+}
+
+.field__input-wrap input {
+  padding-right: 42px;
+}
+
+.toggle-pass {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--slate);
+  padding: 4px;
+  display: flex;
+}
+.toggle-pass:hover { color: var(--ink); }
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 0.88rem;
+  color: var(--slate);
+  margin: 4px 0 24px;
+  cursor: pointer;
+}
+
+.checkbox input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--ink);
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 13px 18px;
+  border-radius: 10px;
+  border: none;
+  background: var(--ink);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.98rem;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-primary:hover { background: var(--ink-soft); }
+.btn-primary:active { transform: translateY(1px); }
+.btn-primary:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: default;
+}
+
+.form-status {
+  min-height: 18px;
+  text-align: center;
+  font-size: 0.85rem;
+  margin: 12px 0 0;
+  color: var(--green);
+}
+.form-status.is-error { color: #C5473A; }
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 26px 0 20px;
+  color: var(--slate-light);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.divider::before, .divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.signup-line {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--slate);
+  margin: 0;
+}
+
+.legal {
+  max-width: 380px;
+  text-align: center;
+  font-size: 0.76rem;
+  color: var(--slate-light);
+  margin: 28px 0 0;
+  line-height: 1.5;
+}
